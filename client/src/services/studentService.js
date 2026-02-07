@@ -1,0 +1,129 @@
+// Student-specific API service that uses studentToken
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+class StudentApiService {
+  constructor(baseURL = API_BASE_URL) {
+    this.baseURL = baseURL;
+  }
+
+  async request(endpoint, options = {}) {
+    const url = `${this.baseURL}${endpoint}`;
+
+    // קבלת studentToken מ-localStorage
+    const token = localStorage.getItem('studentToken');
+
+    if (!token) {
+      throw new Error('לא מאומת. נדרש token.');
+    }
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        ...options.headers,
+      },
+      ...options,
+    };
+
+    // אם יש body, צריך להמיר ל-JSON
+    if (config.body && typeof config.body === 'object') {
+      config.body = JSON.stringify(config.body);
+    }
+
+    try {
+      const response = await fetch(url, config);
+      const data = await response.json();
+
+      if (!response.ok) {
+        // אם ה-token לא תקין, למחוק אותו
+        if (response.status === 401) {
+          localStorage.removeItem('studentToken');
+          throw new Error('Token לא תקין לתלמיד');
+        }
+        throw new Error(data.message || 'An error occurred');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('API request failed:', error);
+      throw error;
+    }
+  }
+}
+
+const studentApi = new StudentApiService();
+
+const studentService = {
+  async login(email, phone, password) {
+    // Login הוא endpoint ציבורי שלא דורש token
+    const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    const response = await fetch(`${API_BASE_URL}/student/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, phone, password }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'An error occurred');
+    }
+    return data;
+  },
+
+  async changePassword(currentPassword, newPassword) {
+    return studentApi.request('/student/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+  },
+
+  async resetPassword() {
+    return studentApi.request('/student/auth/reset-password', {
+      method: 'POST',
+    });
+  },
+
+  async resetPasswordPublic(email, phone) {
+    // שימוש ב-API רגיל (לא studentApi) כי זה endpoint ציבורי
+    const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    const response = await fetch(`${API_BASE_URL}/student/auth/reset-password-public`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, phone }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'An error occurred');
+    }
+    return data;
+  },
+
+  async getProfile() {
+    return studentApi.request('/student/profile');
+  },
+
+  async getCourses() {
+    return studentApi.request('/student/courses');
+  },
+
+  async getCourseDetails(courseId) {
+    return studentApi.request(`/student/courses/${courseId}`);
+  },
+
+  async getGrades() {
+    return studentApi.request('/student/grades');
+  },
+
+  async getGradesByCourse(courseId) {
+    return studentApi.request(`/student/grades/${courseId}`);
+  },
+
+  async getRecommendedWorkshops() {
+    return studentApi.request('/student/workshops');
+  },
+};
+
+export default studentService;

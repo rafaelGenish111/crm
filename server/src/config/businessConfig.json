@@ -1,0 +1,37 @@
+{
+  "business": {
+    "name": "בית הספר לקורסים",
+    "nameEn": "School for Courses",
+    "type": "school",
+    "description": "מערכת CRM לניהול בית ספר לקורסים",
+    "logo": "/assets/logo.png",
+    "favicon": "/assets/favicon.ico",
+    "contact": {
+      "phone": "03-1234567",
+      "email": "info@school.com",
+      "address": "רחוב ראשי 123, תל אביב",
+      "website": "https://www.school.com"
+    },
+    "branding": {
+      "primaryColor": "#3B82F6",
+      "secondaryColor": "#8B5CF6",
+      "accentColor": "#10B981",
+      "fontFamily": "system-ui",
+      "rtl": true
+    },
+    "features": {
+      "whatsappEnabled": true,
+      "emailEnabled": true,
+      "paymentEnabled": true,
+      "aiBotEnabled": true,
+      "campaignsEnabled": true
+    },
+    "settings": {
+      "currency": "ILS",
+      "currencySymbol": "₪",
+      "dateFormat": "DD/MM/YYYY",
+      "timezone": "Asia/Jerusalem",
+      "language": "he"
+    }
+  }
+}

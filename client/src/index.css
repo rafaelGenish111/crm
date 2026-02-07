@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Heebo', system-ui, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  direction: rtl;
+  text-align: right;
+  background: linear-gradient(135deg, #FFF8F0 0%, #FEFEFE 50%, #E8F4F8 100%);
+  background-attachment: fixed;
+}
+
+/* Origami Paper Effect */
+@layer components {
+  .origami-paper {
+    @apply bg-white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(0, 0, 0, 0.02);
+    background: linear-gradient(135deg, #FEFEFE 0%, #FFF8F0 100%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    position: relative;
+  }
+
+  .origami-paper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 50%);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .origami-card {
+    @apply origami-paper p-6 transition-all duration-300;
+  }
+
+  .origami-card:hover {
+    @apply -translate-y-1;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
+    transform: translateY(-4px) rotateX(2deg);
+  }
+
+  .origami-button {
+    @apply px-6 py-3 font-medium transition-all duration-300;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(0, 0, 0, 0.02);
+    @apply transform hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  .origami-button:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
+  }
+
+  .origami-button-primary {
+    @apply origami-button text-white;
+    background: linear-gradient(to right, #FFB4A2, #FFE5D9);
+  }
+
+  .origami-button-primary:hover {
+    background: linear-gradient(to right, rgba(255, 180, 162, 0.9), rgba(255, 229, 217, 0.9));
+  }
+
+  .origami-button-secondary {
+    @apply origami-button text-gray-800;
+    background: linear-gradient(to right, #C8D5B9, #B8E0D2);
+  }
+
+  .origami-button-secondary:hover {
+    background: linear-gradient(to right, rgba(200, 213, 185, 0.9), rgba(184, 224, 210, 0.9));
+  }
+
+  /* גדלים אחידים לכרטיסים */
+  .origami-card-standard {
+    @apply origami-card;
+    min-height: 200px;
+  }
+
+  /* גדלים אחידים לסקשנים */
+  .origami-section {
+    @apply space-y-6;
+  }
+
+  .origami-section-grid {
+    @apply grid gap-6;
+  }
+
+  .origami-input {
+    @apply w-full px-4 py-3 border border-gray-200;
+    @apply bg-white/80 backdrop-blur-sm;
+    @apply transition-all duration-200;
+    border-radius: 12px;
+  }
+
+  .origami-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 180, 162, 0.3);
+    border-color: #FFB4A2;
+  }
+
+  .origami-sidebar {
+    @apply backdrop-blur-md border-l border-white/20;
+    background: linear-gradient(180deg, rgba(200, 213, 185, 0.95) 0%, rgba(184, 224, 210, 0.95) 100%);
+  }
+
+  .origami-header {
+    @apply bg-white/80 backdrop-blur-md border-b border-gray-100/50;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 248, 240, 0.9) 100%);
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Fix for RTL lists */
+[dir="rtl"] ul,
+[dir="rtl"] ol {
+  padding-right: 1.5rem;
+  padding-left: 0;
+}
+
+/* Fix for RTL inputs with LTR content (emails, passwords) */
+input[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Touch-friendly improvements */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Safe area insets for mobile devices */
+@supports (padding: max(0px)) {
+  .safe-area-inset-top {
+    padding-top: max(env(safe-area-inset-top), 0px);
+  }
+
+  .safe-area-inset-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
+  }
+
+  .safe-area-inset-left {
+    padding-left: max(env(safe-area-inset-left), 0px);
+  }
+
+  .safe-area-inset-right {
+    padding-right: max(env(safe-area-inset-right), 0px);
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid #FFB4A2;
+  outline-offset: 2px;
+}
+
+/* Loading animation */
+@keyframes pulse-slow {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
