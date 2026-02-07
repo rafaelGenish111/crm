@@ -14,6 +14,8 @@ const corsOptions = {
     const allowedOrigins = [
       process.env.FRONTEND_URL,
       process.env.VITE_API_URL?.replace('/api', ''),
+      process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`,
+      process.env.VERCEL_BRANCH_URL && `https://${process.env.VERCEL_BRANCH_URL}`,
       'http://localhost:3000',
       'http://localhost:5173',
       'http://localhost:5174',
@@ -24,6 +26,11 @@ const corsOptions = {
 
     // Allow any localhost port in development
     if (process.env.NODE_ENV === 'development' && origin.match(/^http:\/\/localhost:\d+$/)) {
+      return callback(null, true);
+    }
+
+    // Allow *.vercel.app in production (including preview deployments)
+    if (origin && origin.match(/^https:\/\/[\w.-]+\.vercel\.app$/)) {
       return callback(null, true);
     }
 

@@ -1,5 +1,5 @@
 // Student-specific API service that uses studentToken
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000/api' : '/api');
 
 class StudentApiService {
   constructor(baseURL = API_BASE_URL) {
@@ -56,7 +56,7 @@ const studentApi = new StudentApiService();
 const studentService = {
   async login(email, phone, password) {
     // Login הוא endpoint ציבורי שלא דורש token
-    const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000/api' : '/api');
     const response = await fetch(`${API_BASE_URL}/student/auth/login`, {
       method: 'POST',
       headers: {
@@ -86,7 +86,7 @@ const studentService = {
 
   async resetPasswordPublic(email, phone) {
     // שימוש ב-API רגיל (לא studentApi) כי זה endpoint ציבורי
-    const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000/api' : '/api');
     const response = await fetch(`${API_BASE_URL}/student/auth/reset-password-public`, {
       method: 'POST',
       headers: {
