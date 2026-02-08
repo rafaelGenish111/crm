@@ -182,6 +182,12 @@ curl https://your-project.vercel.app/api/health
 - ודא ש-`vercel.json` מוגדר נכון
 - ודא שה-routes מוגדרים נכון
 
+### שגיאת 500 (Internal Server Error)
+1. **בדוק את הלוגים** – Vercel Dashboard → Project → Logs (או Deployments → בחר deployment → Function Logs)
+2. **משתני סביבה** – ודא ש-MONGODB_URI ו-JWT_SECRET מוגדרים ב-Settings → Environment Variables
+3. **MongoDB Atlas** – Network Access חייב לכלול `0.0.0.0/0` (או את IP של Vercel) – Serverless עובד מכל מיקום
+4. **בדיקת חיבור** – `curl https://your-project.vercel.app/api/health` – אם מחזיר JSON, השרת רץ
+
 ---
 
 ## עדכונים עתידיים

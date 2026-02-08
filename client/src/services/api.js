@@ -28,7 +28,14 @@ class ApiService {
 
     try {
       const response = await fetch(url, config);
-      const data = await response.json();
+      const text = await response.text();
+      let data;
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        // Server returned non-JSON (e.g. HTML error page)
+        throw new Error(response.ok ? 'Invalid response' : `שגיאת שרת (${response.status}): ${text.slice(0, 100)}`);
+      }
 
       if (!response.ok) {
         // אם ה-token לא תקין, למחוק אותו

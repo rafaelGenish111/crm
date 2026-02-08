@@ -2,14 +2,12 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/crm-demo', {
-      // Mongoose 6+ no longer needs these options
-    });
-
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/crm-demo';
+    await mongoose.connect(uri, { serverSelectionTimeoutMS: 10000 });
+    console.log(`✅ MongoDB Connected: ${mongoose.connection.host}`);
   } catch (error) {
     console.error(`❌ MongoDB connection error: ${error.message}`);
-    process.exit(1);
+    if (process.env.NODE_ENV !== 'production') process.exit(1);
   }
 };
 
