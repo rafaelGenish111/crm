@@ -40,6 +40,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        globIgnores: ['**/assets/logo.png', '**/assets/logo.*'],
+        maximumFileSizeToCacheInBytes: 6 * 1024 * 1024, // 6MB - לוגו גדול
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/api\./i,
