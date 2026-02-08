@@ -32,7 +32,13 @@ class StudentApiService {
 
     try {
       const response = await fetch(url, config);
-      const data = await response.json();
+      const text = await response.text();
+      let data;
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        throw new Error(response.ok ? 'תגובה לא תקינה' : `שגיאת שרת (${response.status})`);
+      }
 
       if (!response.ok) {
         // אם ה-token לא תקין, למחוק אותו
@@ -55,16 +61,19 @@ const studentApi = new StudentApiService();
 
 const studentService = {
   async login(email, phone, password) {
-    // Login הוא endpoint ציבורי שלא דורש token
     const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000/api' : '/api');
     const response = await fetch(`${API_BASE_URL}/student/auth/login`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, phone, password }),
     });
-    const data = await response.json();
+    const text = await response.text();
+    let data;
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch {
+      throw new Error('שגיאה בתגובת השרת');
+    }
     if (!response.ok) {
       throw new Error(data.message || 'An error occurred');
     }
@@ -85,16 +94,19 @@ const studentService = {
   },
 
   async resetPasswordPublic(email, phone) {
-    // שימוש ב-API רגיל (לא studentApi) כי זה endpoint ציבורי
     const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000/api' : '/api');
     const response = await fetch(`${API_BASE_URL}/student/auth/reset-password-public`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, phone }),
     });
-    const data = await response.json();
+    const text = await response.text();
+    let data;
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch {
+      throw new Error('שגיאה בתגובת השרת');
+    }
     if (!response.ok) {
       throw new Error(data.message || 'An error occurred');
     }
