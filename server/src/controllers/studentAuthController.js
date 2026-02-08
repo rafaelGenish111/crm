@@ -143,7 +143,8 @@ const getStudentProfile = async (req, res) => {
       student: studentData,
     });
   } catch (error) {
-    console.error('Get student profile error:', error);
+    console.error('Get student profile error:', error?.message || error);
+    if (error?.stack) console.error(error.stack);
     res.status(500).json({ message: 'שגיאה בקבלת פרופיל תלמיד' });
   }
 };

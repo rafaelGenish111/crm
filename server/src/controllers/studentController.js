@@ -147,7 +147,8 @@ const getStudentCourses = async (req, res) => {
 
     res.json({ courses });
   } catch (error) {
-    console.error('Get student courses error:', error);
+    console.error('Get student courses error:', error?.message || error);
+    if (error?.stack) console.error(error.stack);
     res.status(500).json({ message: 'שגיאה בקבלת קורסים' });
   }
 };
@@ -258,6 +259,7 @@ const getStudentGrades = async (req, res) => {
     // ארגון לפי קורסים
     const gradesByCourse = {};
     grades.forEach(grade => {
+      if (!grade.exam || !grade.exam.course) return; // דילוג על ציונים עם exam/course חסר
       const courseId = grade.exam.course._id.toString();
       if (!gradesByCourse[courseId]) {
         gradesByCourse[courseId] = {
@@ -301,7 +303,8 @@ const getStudentGrades = async (req, res) => {
       summary,
     });
   } catch (error) {
-    console.error('Get student grades error:', error);
+    console.error('Get student grades error:', error?.message || error);
+    if (error?.stack) console.error(error.stack);
     res.status(500).json({ message: 'שגיאה בקבלת ציונים' });
   }
 };
@@ -319,7 +322,8 @@ const getStudentGradesByCourse = async (req, res) => {
       course: courseId,
       customer: customerId,
       status: { $in: ['approved', 'enrolled'] },
-    });
+    })
+      .populate('course', 'name subject');
 
     if (!enrollment) {
       return res.status(404).json({ message: 'קורס לא נמצא או שאינך רשום אליו' });
@@ -396,7 +400,8 @@ const getRecommendedWorkshops = async (req, res) => {
 
     res.json({ workshops: recommendedWorkshops });
   } catch (error) {
-    console.error('Get recommended workshops error:', error);
+    console.error('Get recommended workshops error:', error?.message || error);
+    if (error?.stack) console.error(error.stack);
     res.status(500).json({ message: 'שגיאה בקבלת סדנאות מומלצות' });
   }
 };

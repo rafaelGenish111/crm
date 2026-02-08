@@ -58,6 +58,7 @@ class StudentApiService {
 }
 
 const studentApi = new StudentApiService();
+export { studentApi };
 
 const studentService = {
   async login(email, phone, password) {

@@ -26,17 +26,27 @@ function StudentDashboard() {
       setLoading(true);
       setError(null);
 
-      const [coursesData, gradesData, workshopsData] = await Promise.all([
+      const results = await Promise.allSettled([
         studentService.getCourses(),
         studentService.getGrades(),
         studentService.getRecommendedWorkshops(),
       ]);
 
-      setCourses(coursesData.courses || []);
-      setGrades(gradesData);
-      setWorkshops(workshopsData.workshops || []);
+      const [coursesResult, gradesResult, workshopsResult] = results;
+
+      if (coursesResult.status === 'fulfilled') setCourses(coursesResult.value?.courses || []);
+      else console.warn('Failed to load courses:', coursesResult.reason);
+
+      if (gradesResult.status === 'fulfilled') setGrades(gradesResult.value);
+      else console.warn('Failed to load grades:', gradesResult.reason);
+
+      if (workshopsResult.status === 'fulfilled') setWorkshops(workshopsResult.value?.workshops || []);
+      else console.warn('Failed to load workshops:', workshopsResult.reason);
+
+      const errors = results.filter((r) => r.status === 'rejected').map((r) => r.reason?.message);
+      if (errors.length > 0) setError(errors.join('; '));
     } catch (err) {
-      setError(err.message);
+      setError(err?.message || 'שגיאה בטעינת נתונים');
     } finally {
       setLoading(false);
     }

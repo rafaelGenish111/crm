@@ -48,6 +48,12 @@ JWT_SECRET=your-very-secure-secret-key-min-32-chars
 NODE_ENV=production
 ```
 
+**לעוזר AI (בוט סטודנטים):**
+```
+OPENAI_API_KEY=sk-proj-...
+AI_MODEL=gpt-4
+```
+
 **אופציונלי:**
 ```
 VITE_API_URL=https://your-project.vercel.app/api
@@ -181,6 +187,11 @@ curl https://your-project.vercel.app/api/health
 ### שגיאת 404 ב-routes
 - ודא ש-`vercel.json` מוגדר נכון
 - ודא שה-routes מוגדרים נכון
+
+### הבוט לא מגיב (עוזר AI)
+1. **OPENAI_API_KEY** – ודא שהוגדר ב-Vercel: Settings → Environment Variables
+2. **מפתח תקין** – וודא שה־API key תקף ובעל יתרה ב־OpenAI
+3. **מודל** – AI_MODEL=gpt-4 או gpt-3.5-turbo (gpt-5 לא קיים)
 
 ### שגיאת 500 (Internal Server Error)
 1. **בדוק את הלוגים** – Vercel Dashboard → Project → Logs (או Deployments → בחר deployment → Function Logs)
